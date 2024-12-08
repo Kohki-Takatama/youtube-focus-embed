@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Youtube-focus",
   "version": "1.0.0",
-  "permissions": ["activeTab", "tabs"],
+  "permissions": ["scripting", "tabs"],
   "commands": {
     "focus": {
       "suggested_key": {
