@@ -1,17 +1,25 @@
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'focus') {
     chrome.tabs.query({ active: true, currentWindow: true }, (e) => {
-      const EMBED_PATH = 'embed/';
-      const WATCH_QUERY = 'watch?v=';
+      // 動画パラメータ
+      const EMBED_PATH = '/embed';
+      const WATCH_PATH = '/watch';
       const AUTOPLAY_PARAM = '?autoplay=1';
       const currentTab = e[0];
-      const prevUrl = currentTab.url;
-      let newUrl = prevUrl;
-      if (prevUrl.includes(WATCH_QUERY)) {
+      const prevUrl = new URL(currentTab.url);
+      let videoId = prevUrl.searchParams.get('v');
+      //
+      let newUrl = '';
+      console.log(prevUrl);
+
+      // NOTE: switchは使えない。pathnameが理由。watch: idを含まない / embed: 含む = 完全一致が不可
+      if (prevUrl.pathname.includes(WATCH_PATH)) {
+        videoId = prevUrl.searchParams.get('v');
         // embedの場合は、autoplayをonにする
-        newUrl = prevUrl.replace(WATCH_QUERY, EMBED_PATH) + AUTOPLAY_PARAM;
-      } else if (prevUrl.includes(EMBED_PATH)) {
-        newUrl = prevUrl.replace(EMBED_PATH, WATCH_QUERY);
+        newUrl = `https://www.youtube.com${EMBED_PATH}/${videoId}${AUTOPLAY_PARAM}`;
+      } else if (prevUrl.pathname.includes) {
+        videoId = prevUrl.pathname.replace(EMBED_PATH + '/', '');
+        newUrl = `https://www.youtube.com${WATCH_PATH}?v=${videoId}`;
       } else {
         return;
       }
