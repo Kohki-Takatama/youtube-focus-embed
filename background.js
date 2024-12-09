@@ -13,6 +13,8 @@ chrome.commands.onCommand.addListener(async (command) => {
         const EMBED_PATH = '/embed';
         const WATCH_PATH = '/watch';
         const AUTOPLAY_PARAM = '?autoplay=1';
+        // ユーザー体験向上のため、再生開始時間を調整する
+        const uxBufferTime = 1;
         let videoId = '';
         let newUrl = prevUrl;
 
@@ -20,10 +22,10 @@ chrome.commands.onCommand.addListener(async (command) => {
         if (prevUrl.pathname.includes(WATCH_PATH)) {
           videoId = prevUrl.searchParams.get('v');
           // embedの場合のみautoplayを付加する
-          newUrl = `https://www.youtube.com${EMBED_PATH}/${videoId}${AUTOPLAY_PARAM}&start=${time}`;
+          newUrl = `https://www.youtube.com${EMBED_PATH}/${videoId}${AUTOPLAY_PARAM}&start=${time + uxBufferTime}`;
         } else if (prevUrl.pathname.includes) {
           videoId = prevUrl.pathname.replace(EMBED_PATH + '/', '');
-          newUrl = `https://www.youtube.com${WATCH_PATH}?v=${videoId}&t=${time}`;
+          newUrl = `https://www.youtube.com${WATCH_PATH}?v=${videoId}&t=${time + uxBufferTime}`;
         }
         return newUrl;
       };
